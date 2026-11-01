@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         web.getSettings().setDatabaseEnabled(true);
         web.getSettings().setAllowFileAccess(true);
         web.getSettings().setMediaPlaybackRequiresUserGesture(true);
-        web.setBackgroundColor(0xFF11141A);
+        web.setBackgroundColor(0xFF171310);
         web.addJavascriptInterface(new Bridge(), "Android");
 
         web.setWebViewClient(new WebViewClient() {
