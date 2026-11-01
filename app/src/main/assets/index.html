@@ -272,6 +272,25 @@
     </div>
 
     <div class="card">
+      <h2>Daily reminder</h2>
+      <div class="sub">A gentle check-in nudge at the time you choose.</div>
+      <div class="rowline">
+        <div><div class="lab">Reminder</div><div class="hint" id="remState">Off</div></div>
+        <button class="btn ghost" id="remToggle" style="flex:initial; padding:10px 16px;">Turn on</button>
+      </div>
+      <div class="rowline">
+        <div><div class="lab">Time</div><div class="hint">When to remind you</div></div>
+        <input type="time" id="remTime" value="20:00" style="border:1px solid var(--line); background:var(--surface-2); color:var(--fg); border-radius:10px; padding:8px 10px; font-family:var(--f-body); font-size:.95rem;">
+      </div>
+      <div class="sub" id="remNote" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="card" id="widgetCard">
+      <h2>Home-screen widget</h2>
+      <div class="sub" id="widgetNote">Long-press your home screen, choose Widgets, find “Resolve”, and drop it on. It shows your streak and rank, and opens the app when tapped.</div>
+    </div>
+
+    <div class="card">
       <h2>Tools</h2>
       <div class="rowline"><div><div class="lab">Focus Mode</div><div class="hint">Full-screen, distraction-free urge session</div></div>
         <button class="btn primary" id="focusBtn2" style="flex:initial; padding:10px 16px;">Enter</button></div>
@@ -395,7 +414,7 @@
   }
 
   function load() {
-    var def = { start: Date.now(), best: 0, resets: 0, urges: 0, why: "", accent: "amber", entries: [] };
+    var def = { start: Date.now(), best: 0, resets: 0, urges: 0, why: "", accent: "amber", remOn: false, remTime: "20:00", entries: [] };
     try {
       var raw = localStorage.getItem(KEY);
       if (!raw) { def.entries = [{ t: Date.now(), m: "💪", text: "Day one. Set up Resolve to keep myself honest. (example — delete me)" }]; return def; }
@@ -403,6 +422,7 @@
       if (typeof s.start !== "number") s.start = Date.now();
       s.best = +s.best || 0; s.resets = +s.resets || 0; s.urges = +s.urges || 0;
       if (typeof s.why !== "string") s.why = ""; if (typeof s.accent !== "string") s.accent = "amber";
+      if (typeof s.remOn !== "boolean") s.remOn = false; if (typeof s.remTime !== "string") s.remTime = "20:00";
       if (!Array.isArray(s.entries)) s.entries = [];
       return s;
     } catch (e) { return def; }
@@ -545,7 +565,7 @@
   $("cancelReset").addEventListener("click", function () { closeSheet("sheet-reset"); });
   $("doReset").addEventListener("click", function () {
     var d = currentDays(); if (d > state.best) state.best = d; state.resets += 1; state.start = Date.now();
-    save(); renderAll(); closeSheet("sheet-reset"); go("home");
+    save(); renderAll(); pushNative(); closeSheet("sheet-reset"); go("home");
   });
   Array.prototype.forEach.call(document.querySelectorAll(".sheet"), function (ov) { ov.addEventListener("click", function (e) { if (e.target === ov) ov.classList.remove("open"); }); });
 
@@ -592,11 +612,41 @@
   $("themeBtn").addEventListener("click", toggleTheme);
   try { window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyAccent); } catch (e) {}
 
+  // Native bridge (present only inside the installed app) — reminders + widget sync.
+  var BRIDGE = !!(window.Android && window.Android.setReminder);
+  function pushNative() {
+    if (!BRIDGE) return;
+    try { window.Android.saveState(state.start, RANKS[rankIndex(currentDays())].n); } catch (e) {}
+  }
+  function parseHM(s) { var m = /^(\d{1,2}):(\d{2})$/.exec(s || "20:00"); return m ? [Math.min(23, +m[1]), Math.min(59, +m[2])] : [20, 0]; }
+  function renderReminder() {
+    $("remTime").value = state.remTime;
+    $("remState").textContent = state.remOn ? ("On · " + state.remTime) : "Off";
+    $("remToggle").textContent = state.remOn ? "Turn off" : "Turn on";
+    var note = $("remNote");
+    if (!BRIDGE) { note.textContent = "Reminders run in the installed Android app."; }
+    else if (state.remOn && window.Android.notificationsAllowed && !window.Android.notificationsAllowed()) {
+      note.textContent = "Allow notifications for Resolve in Android settings to receive reminders.";
+    } else { note.textContent = ""; }
+  }
+  function applyReminder() {
+    if (!BRIDGE) return;
+    try {
+      if (state.remOn) { var hm = parseHM(state.remTime); window.Android.setReminder(hm[0], hm[1]); }
+      else { window.Android.cancelReminder(); }
+    } catch (e) {}
+  }
+  $("remToggle").addEventListener("click", function () { state.remOn = !state.remOn; save(); applyReminder(); renderReminder(); });
+  $("remTime").addEventListener("change", function () { state.remTime = $("remTime").value || "20:00"; save(); if (state.remOn) applyReminder(); renderReminder(); });
+  if (!BRIDGE) { var wn = $("widgetNote"); if (wn) wn.textContent = "The home-screen widget is part of the installed Android app."; }
+
   var dm = document.querySelector('.mood[data-m="🙂"]'); if (dm) dm.classList.add("sel");
   applyAccent();
+  renderReminder();
+  pushNative();
   renderAll();
   setInterval(renderClock, 1000);
-  setInterval(function () { renderHome(); renderStats(); }, 60000);
+  setInterval(function () { renderHome(); renderStats(); pushNative(); }, 60000);
 })();
 </script>
 </body>

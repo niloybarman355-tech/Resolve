@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/widget_bg"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/wDays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="#FFFFFF"
+        android:textSize="38sp"
+        android:textStyle="bold"
+        android:includeFontPadding="false" />
+
+    <TextView
+        android:id="@+id/wLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DAYS CLEAN"
+        android:textColor="#9AA3B3"
+        android:textSize="10sp"
+        android:letterSpacing="0.12"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/wRank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Spark"
+        android:textColor="#E0A85C"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp" />
+</LinearLayout>

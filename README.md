@@ -5,7 +5,7 @@ Everything is stored on the device — no accounts, no ads, no network calls.
 
 ## Download
 
-**[Download the latest APK](dist/Resolve-1.3.apk?raw=true)** (v1.3)
+**[Download the latest APK](dist/Resolve-1.4.apk?raw=true)** (v1.4)
 
 On your phone: enable "Install unknown apps" for your browser or file manager,
 then open the downloaded APK to install.
@@ -24,6 +24,8 @@ then open the downloaded APK to install.
   a session timer, rotating affirmations, and an "urge resisted" counter.
 - **Daily check-in journal** with mood, and a 7-day insight strip.
 - **Your why** — a personal motivation line shown on Home.
+- **Daily reminders** — a scheduled check-in notification at a time you choose.
+- **Home-screen widget** — shows your current streak days and rank; tap to open.
 - **Accent themes** and light/dark mode.
 
 ## How it's built
