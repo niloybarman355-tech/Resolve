@@ -6,7 +6,7 @@ device: no accounts, no ads, no network calls.
 
 ## Download
 
-**[Download the latest APK](dist/Resolve-2.0.apk?raw=true)** (v2.0 · Editorial Luxe)
+**[Download the latest APK](dist/Resolve-2.1.apk?raw=true)** (v2.1 · Editorial Luxe)
 
 On your phone: enable "Install unknown apps" for your browser/file manager, then
 open the downloaded APK to install. Installs as an update over v1.x and keeps
