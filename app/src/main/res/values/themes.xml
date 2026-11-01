@@ -1,0 +1,6 @@
+<resources>
+    <style name="Theme.Resolve" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:statusBarColor">#11141A</item>
+        <item name="android:navigationBarColor">#11141A</item>
+    </style>
+</resources>

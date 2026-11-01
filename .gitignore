@@ -1,0 +1,11 @@
+# Android / Gradle build outputs
+build/
+.gradle/
+local.properties
+*.aab
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+# ignore build-dir apks, but the published dist/ apk is tracked
+app/build/
